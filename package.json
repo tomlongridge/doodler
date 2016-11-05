@@ -1,0 +1,23 @@
+{
+  "name": "doodler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "dependencies": {
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomlongridge/doodler.git"
+  },
+  "author": "Tom Longridge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomlongridge/doodler/issues"
+  },
+  "homepage": "https://github.com/tomlongridge/doodler"
+}
