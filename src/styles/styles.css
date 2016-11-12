@@ -1,0 +1,15 @@
+body {
+  padding-top: 50px;
+}
+
+.navPanel {
+  border: 1px solid red;
+}
+
+.linePanel {
+  border: 1px solid blue;
+}
+
+.optionPanel {
+  border: 1px solid green;
+}
