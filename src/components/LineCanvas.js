@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import GridCanvas from './GridCanvas';
 
 const Move = {
   UP: 39,
@@ -6,99 +7,75 @@ const Move = {
   PLACE: 40
 };
 
-class LineCanvas extends React.Component {
+class LineCanvas extends GridCanvas {
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      line: [this.props.startPlaceBell - 1]
+    };
+  }
 
   isValid(keyCode) {
     return (keyCode === Move.UP) || (keyCode === Move.PLACE) || (keyCode === Move.DOWN);
   }
 
-  drawGrid(ctx, stage, rows, rowOffset, rowHeight, startPlaceBell, endPlaceBell) {
-
-    ctx.font = "12pt sans-serif";
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-
-    for(var i = 1; i <= stage; i++) {
-    ctx.fillText(i, (i * rowHeight), rowHeight);
-
-    ctx.beginPath();
-    ctx.strokeStyle = '#999999';
-    ctx.moveTo(i * rowHeight, rowOffset);
-    ctx.lineTo(i * rowHeight, rowOffset + rows * rowHeight);
-    ctx.stroke();
-    ctx.closePath();
-    }
-
-    ctx.arc(startPlaceBell * rowHeight, rowOffset, 5, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.closePath();
-    ctx.arc(endPlaceBell * rowHeight, rowOffset + rows * rowHeight, 5, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
-    let ctx = this.refs.canvas.getContext("2d");
 
-    var stage = 6;
-    var rows = 20;
+    this.drawGrid();
+    const ctx = this.getContext();
+    ctx.strokeStyle = this.props.lineColor;
 
-    var verticalOffset = 30;
-    var rowHeight = 20;
-    var startPlace = 2;
-    var endPlace = 6;
-    this.drawGrid(ctx, stage, rows, verticalOffset, rowHeight, startPlace, endPlace);
+    document.addEventListener("keydown", (event) => {
 
-    ctx.strokeStyle = 'blue';
-    var verticalPos = 0;
-    var line = [startPlace];
+      const line = Object.assign([], this.state.line);
 
-      document.addEventListener("keydown", (event) => {
+      if (this.isValid(event.which) && (line.length <= this.props.rows)) {
 
-    if (this.isValid(event.which) && (line.length <= rows)) {
+        event.preventDefault();
+        let from = line.pop();
+        let to = from;
 
-    event.preventDefault();
+        switch(event.which) {
+          case Move.UP:
+            if (from < this.props.stage - 1) to++;
+            else return;
+            break;
+          case Move.DOWN:
+            if (from >= 1) to--;
+            else return;
+            break;
+          case Move.PLACE:
+            break;
+        }
 
-    var from = line.pop();
-    var to = from;
+        ctx.beginPath();
+        line.push(from);
+        ctx.moveTo(this.props.padding + (from * this.getColumnWidth()),
+                   this.getLineOffset() + (line.length - 1) * this.getLineHeight());
+        line.push(to);
+        ctx.lineTo(this.props.padding + (to * this.getColumnWidth()),
+                   this.getLineOffset() + (line.length - 1) * this.getLineHeight());
+        ctx.stroke();
+        ctx.closePath();
 
-    switch(event.which) {
-    case Move.UP:
-    if (from <= stage - 1) to++;
-    else return;
-    break;
-    case Move.DOWN:
-    if (from >= 2) to--;
-    else return;
-    break;
-    case Move.PLACE:
-    break;
-    }
+        this.setState({ line });
 
-    ctx.beginPath();
-    line.push(from);
-    ctx.moveTo(from * rowHeight, verticalOffset + (line.length - 1) * rowHeight);
-    line.push(to);
-    ctx.lineTo(to * rowHeight, verticalOffset + (line.length - 1) * rowHeight);
-    ctx.stroke();
-    ctx.closePath();
+      }
 
-  }
+    });
 
-  });
-
-  }
-
-  render() {
-    return (
-      <canvas ref="canvas" width="600" height="600"></canvas>
-    );
   }
 
 }
+
+LineCanvas.propTypes = {
+  lineColor: PropTypes.string
+};
+
+LineCanvas.defaultProps = Object.assign({}, GridCanvas.defaultProps, {
+  lineColor: "blue"
+});
 
 export default LineCanvas;
