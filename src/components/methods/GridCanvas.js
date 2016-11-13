@@ -14,7 +14,8 @@ class GridCanvas extends React.Component {
     return ctx;
   }
 
-  initialise(ctx) {
+  _initialise() {
+
   }
 
   getLineOffset() {
@@ -22,14 +23,19 @@ class GridCanvas extends React.Component {
   }
 
   getLineHeight() {
-    return (this.props.height - this.getLineOffset() - this.props.padding) / this.props.rows
+    return (this.props.height - this.getLineOffset() - this.props.padding) / this.props.rows;
   }
 
   getColumnWidth() {
-    return (this.props.width - (2 * this.props.padding)) / this.props.stage;
+    return (this.refs.canvas.width - (2 * this.props.padding)) / (this.props.stage - 1);
   }
 
   drawGrid() {
+
+    this.refs.canvas.style.width='100%';
+    this.refs.canvas.style.height='100%';
+    this.refs.canvas.width  = this.refs.canvas.offsetWidth;
+    this.refs.canvas.height = this.refs.canvas.offsetHeight;
 
     const ctx = this.getContext();
 
@@ -37,7 +43,7 @@ class GridCanvas extends React.Component {
     const lineHeight = this.getLineHeight();
     const columnWidth = this.getColumnWidth();
 
-    for(var i = 0; i < this.props.stage; i++) {
+    for(let i = 0; i < this.props.stage; i++) {
       // Draw place bell number
       ctx.fillStyle = this.props.textColor;
       ctx.fillText(i + 1,
@@ -52,6 +58,19 @@ class GridCanvas extends React.Component {
                  lineOffset);
       ctx.lineTo(this.props.padding + (i * columnWidth),
                  lineOffset + (this.props.rows * lineHeight));
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    // Draw horiztonal lines
+    for (let i = 0; i <= this.props.rows; i++) {
+      ctx.strokeStyle = this.props.gridColor;
+      ctx.fillStyle = this.props.gridColor;
+      ctx.beginPath();
+      ctx.moveTo(this.props.padding,
+                 lineOffset + (lineHeight * i));
+      ctx.lineTo(this.props.padding + ((this.props.stage - 1) * columnWidth),
+                 lineOffset + (lineHeight * i));
       ctx.stroke();
       ctx.closePath();
     }
@@ -79,7 +98,7 @@ class GridCanvas extends React.Component {
 
   render() {
     return (
-      <canvas ref="canvas" width={this.props.width} height={this.props.height}></canvas>
+      <canvas ref="canvas" height={this.props.height} ></canvas>
     );
   }
 

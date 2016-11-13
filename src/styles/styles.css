@@ -8,6 +8,7 @@ body {
 
 .linePanel {
   border: 1px solid blue;
+  position:relative;
 }
 
 .optionPanel {
