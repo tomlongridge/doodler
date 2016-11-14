@@ -6,6 +6,6 @@ import MethodPage from './components/methods/MethodPage';
 export default (
   <Route path="/" component={App} >
     <IndexRoute component={MethodPage}/>
-    <Route path="/:method" component={MethodPage} />
+    <Route path="/:methodName" component={MethodPage} />
   </Route>
 );
