@@ -1,0 +1,7 @@
+[1114/210547:ERROR:process_reader_win.cc(233)] ReadMemory at 0x5ff80000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[1114/210547:WARNING:pe_image_reader.cc(281)] could not read dos header from C:\WINDOWS\AppPatch\AcGenral.dll
+[1114/210547:ERROR:process_reader_win.cc(233)] ReadMemory at 0x545e0000 of 64 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[1114/210547:WARNING:pe_image_reader.cc(281)] could not read dos header from C:\Program Files (x86)\Google\Chrome\Application\54.0.2840.71\chrome_child.dll
+[1114/210547:ERROR:process_reader_win.cc(233)] ReadMemory at 0x4f8000 of 32768 bytes failed: Only part of a ReadProcessMemory or WriteProcessMemory request was completed. (0x12B)
+[1114/210547:ERROR:crash_report_exception_handler.cc(98)] WriteEverything failed
+[1114/210547:ERROR:scoped_process_suspend.cc(38)] NtResumeProcess: An attempt was made to access an exiting process.  (0xc000010a)
