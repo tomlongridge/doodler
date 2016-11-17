@@ -32,6 +32,33 @@ class Method {
     return this.name + ' ' + this.getTypeName() + ' ' + this.getStageName();
   }
 
+  getFullNotation() {
+
+    let [notation, leadEnd] = this.notation.split(",");
+    let fullNotation = [];
+    for (let i = 0; i < notation.length; i++) {
+      if (notation[i] == '-') {
+        fullNotation.push(notation[i]);
+      } else if ((i<notation.length-2) && (notation[i] == '-')) {
+        fullNotation.push(notation[i++]);
+      } else if (/[0-9ET]/.test(notation[i])) {
+        if ((i>0) && /[0-9ET]/.test(notation[i-1])) {
+          fullNotation.push(fullNotation.pop() + notation[i]);
+        } else {
+          fullNotation.push(notation[i]);
+        }
+      }
+    }
+
+    let last = fullNotation.pop();
+    let forward = [...fullNotation];
+    let reverse = [...fullNotation.reverse()];
+    let lead = [...forward, last, ...reverse];
+    if (leadEnd) lead.push(leadEnd);
+    return lead;
+
+  }
+
   getGrid() {
 
     const grid = [];
@@ -39,12 +66,16 @@ class Method {
     // Add start row
     let row = '';
     for (let i = 1; i <= this.stage; i++) {
-      row += i;
+      switch(i) {
+        case 10: row += '0'; break;
+        case 11: row += 'E'; break;
+        case 12: row += 'T'; break;
+        default: row += i; break;
+      }
     }
     grid.push(row);
 
-    let [notation, leadEnd] = this.notation.split(",");
-
+    const notation = this.getFullNotation();
     let places = "";
     for (let i = 0; i < notation.length; i++) {
       if (notation[i] === '-') {
