@@ -11,61 +11,40 @@ class MethodPage extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.props.actions.loadMethod();
-
     this.state = {
-      method: Object.assign({}, this.props.method),
-      isLoaded: false
+      method: Object.assign({}, this.props.method)
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    debugger;
-    if (nextProps.method) {
-      this.setState({isLoaded:true});
-    }
-  }
-
   componentWillMount() {
+    this.props.actions.loadMethod();
   }
 
   render() {
-    debugger;
-    if (!this.state.isLoaded) {
-      return (
-        <p>Loading...</p>
-      );
+    if (!this.props.method) {
+      return (<p>Loading...</p>);
     } else {
-    return (
-          <div className="container-fluid">
-            <h1>{this.props.method.getFullName()}</h1>
-            <div className="row">
-              <NavPanel />
-              <LinePanel />
-              <OptionPanel />
+      return (
+            <div className="container-fluid">
+              <div className="row">
+                <h1>{this.props.method.getFullName()}</h1>
+                <NavPanel />
+                <LinePanel />
+                <OptionPanel />
+              </div>
             </div>
-          </div>
-      );
+        );
     }
   }
 }
 
 MethodPage.propTypes = {
-  method: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-
-  // Get method name from URL
-  //const methodName = ownProps.params.methodName;
-debugger;
-let method = null;
-  if (state.method) {
-    let method = state.method;
-  }
   return {
-    method: method
+    method: state.method
   };
 }
 
