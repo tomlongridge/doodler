@@ -35,6 +35,7 @@ class Method {
   getFullNotation() {
 
     let [notation, leadEnd] = this.notation.split(",");
+
     let fullNotation = [];
     for (let i = 0; i < notation.length; i++) {
       if (notation[i] == '-') {
@@ -54,9 +55,18 @@ class Method {
     let forward = [...fullNotation];
     let reverse = [...fullNotation.reverse()];
     let lead = [...forward, last, ...reverse];
-    if (leadEnd) lead.push(leadEnd);
+    if (typeof leadEnd !== 'undefined') lead.push(leadEnd);
     return lead;
 
+  }
+
+  getBellLabel(bellNumber) {
+    switch(bellNumber) {
+      case 10: return '0';
+      case 11: return 'E';
+      case 12: return 'T';
+      default: return bellNumber;
+    }
   }
 
   getGrid() {
@@ -66,40 +76,19 @@ class Method {
     // Add start row
     let row = '';
     for (let i = 1; i <= this.stage; i++) {
-      switch(i) {
-        case 10: row += '0'; break;
-        case 11: row += 'E'; break;
-        case 12: row += 'T'; break;
-        default: row += i; break;
-      }
+      row += this.getBellLabel(i);
     }
     grid.push(row);
 
     const notation = this.getFullNotation();
-    let places = "";
     for (let i = 0; i < notation.length; i++) {
       if (notation[i] === '-') {
-        if (places.length > 0) {
-          row = this.cross(row, places);
-          places = "";
-          grid.push(row);
-        }
         row = this.cross(row);
-        grid.push(row);
       } else {
-        places += notation[i];
+        row = this.cross(row, notation[i]);
       }
-    }
-    if (places.length > 0) {
-      row = this.cross(row, places);
       grid.push(row);
     }
-
-    if (this.notation.indexOf(",") > -1) {
-      row = this.cross(row, leadEnd);
-      grid.push(row);
-    }
-
     return grid;
   }
 
@@ -108,7 +97,7 @@ class Method {
     let rowPart = '';
     let bells = row.split("");
     for (let i = 1; i <= bells.length; i++) {
-      if (places.indexOf(''+i) > -1) {
+      if (places.indexOf(this.getBellLabel(i)) > -1) {
         crossedRow += rowPart + bells[i-1];
         rowPart = '';
       } else {
